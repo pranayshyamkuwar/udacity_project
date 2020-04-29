@@ -1,4 +1,4 @@
-### udacity project
+### udacity project for programming in data science
 ### Date created
   29/04/2020
 ### project Title
