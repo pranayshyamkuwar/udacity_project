@@ -25,5 +25,5 @@
   counts of each gender (only available for NYC and Chicago)
  
  ### Files used
-    bikeshare.py code for all the above findings
+    bikeshare.py code for all the above findings which can help in inproving the business
   
