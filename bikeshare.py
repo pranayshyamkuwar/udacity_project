@@ -165,13 +165,7 @@ def user_stats(df):
     print('-'*40)
 
 def raw_data(df):
-<<<<<<< .merge_file_a16596
 	#asking user if they want to view the raw data
-||||||| .merge_file_a12856
-
-=======
-	#asking user if he wants to see the raw data
->>>>>>> .merge_file_a20568
     raw_data_view = input('To view the raw data enter Yes or no:')
     raw_data_view.lower()
 
@@ -191,7 +185,7 @@ def main():
         trip_duration_stats(df)
         user_stats(df)
         raw_data(df)
-
+        # getting input from user if he/she would like to continue or not
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
             break
