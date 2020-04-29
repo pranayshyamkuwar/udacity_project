@@ -10,7 +10,7 @@
   most common month,
   most common day of week,
   most common hour of day,
-
+  This gives the result for common month, day, hour from which company can plan their next step 
   #### 2 Popular stations and trip
   most common start station,
   most common end station,
