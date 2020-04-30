@@ -1,0 +1,108 @@
+
+sql query
+
+/* sql query used for first insight */
+/* Question 2:
+Can you provide a table with the movie titles and divide them into 4 levels ( first_quarter ,
+second_quarter , third_quarter , and final_quarter ) based on the quartiles (25%, 50%, 75%) of the rental duration
+for movies across all categories?*/
+
+SELECT movie_title,genre,rental_duration,
+      ntile(4) over (ORDER BY rental_duration) as Quartitle
+ FROM
+      (SELECT fi.title as movie_title,ca.name as  genre,fi.rental_duration as rental_duration
+        FROM film_category fc
+        JOIN film fi
+        ON fc.film_id = fi.film_id
+        JOIN category ca
+        ON fc.category_id=ca.category_id
+      ) table1
+      WHERE genre IN ('Animation', 'Children', 'Classics', 'Comedy', 'Family', 'Music')
+      GROUP BY 1,2,3
+
+
+
+/* sql query used for second insight */
+/*Question 3: Finally, provide a table with the family friendly film category, each of the quartiles, and the
+corresponding count of movies within each combination of film category for each corresponding rental duration
+category. */
+
+SELECT name,quartitle,count(*) as count_
+FROM
+    (SELECT ca.name as name, ntile(4) over (ORDER BY rental_duration) as Quartitle
+        FROM film_category fc
+        JOIN film fi
+        ON fc.film_id = fi.film_id
+        JOIN category ca
+        ON fc.category_id=ca.category_id
+ 	 	) table1
+    WHERE name IN ('Animation', 'Children', 'Classics', 'Comedy', 'Family', 'Music')
+    GROUP BY 1,2
+
+
+/* sql query used for third insight */
+/* quetion: To find out what are top movie genres b y their total sales.*/
+
+WITH table1 as
+  (SELECT ca.name as genre,count(r.customer_id) as no_of_times_rented
+  FROM film_category fc
+  JOIN film fi
+  ON fc.film_id = fi.film_id
+  JOIN category ca
+  ON fc.category_id=ca.category_id
+  JOIN inventory iv
+  ON fi.film_id=iv.film_id
+  JOIN rental r
+  ON iv.inventory_id=r.inventory_id
+  JOIN customer c
+  ON r.customer_id = c.customer_id
+  GROUP BY 1
+  ORDER BY 2 desc),
+
+table2 as
+  (SELECT ca.name as genre, sum(p.amount) as sales
+  FROM film_category fc
+  JOIN film fi
+  ON fc.film_id = fi.film_id
+  JOIN category ca
+  ON fc.category_id=ca.category_id
+  JOIN inventory iv
+  ON fi.film_id=iv.film_id
+  JOIN rental r
+  ON iv.inventory_id=r.inventory_id
+  JOIN payment p
+  ON r.rental_id=p.rental_id
+  GROUP BY 1
+  ORDER BY 2 DESC
+  )
+
+SELECT table1.genre,table1.no_of_times_rented,
+       table2.sales
+FROM   table1
+JOIN   table2
+ON     table1.genre = table2.genre
+
+
+
+
+/* sql query used for fourth insight */
+/*Question 4: Write
+a query that returns the store ID for the store, the year and month and the number of rental orders each store has
+fulfilled for that month. Your table should include a column for each of the following: year, month, store ID and count of re nta l orders
+fulfilled during that month. */
+
+SELECT
+  store.store_id,
+  DATE_PART('YEAR', rental_date) years,
+  DATE_PART('MONTH', rental_date) months,
+  COUNT(*) as rental_counts
+FROM rental
+JOIN payment
+  ON payment.rental_id = rental.rental_id
+JOIN staff
+  ON staff.staff_id = payment.staff_id
+JOIN store
+  ON store.store_id = staff.store_id
+GROUP BY 1,2,3
+order by 4 desc
+
