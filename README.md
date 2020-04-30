@@ -1,4 +1,4 @@
-### udacity project
+### udacity NanoDegree project for Programming for Data Science using Python 
 ### Date created
   29/04/2020
 ### project Title
